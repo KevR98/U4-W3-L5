@@ -4,9 +4,7 @@ import com.github.javafaker.Faker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import kevinramil.Entities.Archivio;
-import kevinramil.Entities.Libro;
-import kevinramil.Entities.Utente;
+import kevinramil.Entities.*;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -36,13 +34,22 @@ public class Application {
             Libro libro = new Libro(isbn, titolo, anno, pagine, autore, genere);
             archivio.aggiungiElemento(libro);
             System.out.println("Aggiunto libro: " + libro);
+
+            String isbnRivista = faker.code().isbn10();
+            String titoloRivista = faker.book().title();
+            int annoRivista = faker.number().numberBetween(1950, 2025);
+            int pagineRivista = faker.number().numberBetween(50, 300);
+            Periodicita[] periodi = Periodicita.values();
+            Periodicita periodicita = periodi[faker.number().numberBetween(0, periodi.length)];
+
+            Rivista rivista = new Rivista(isbnRivista, titoloRivista, annoRivista, pagineRivista, periodicita);
+            archivio.aggiungiElemento(rivista);
+            System.out.println("Aggiunta rivista: " + rivista);
         }
 
-        // 4. Aggiungi 5 utenti fake
         for (int i = 0; i < 5; i++) {
             String nome = faker.name().firstName();
             String cognome = faker.name().lastName();
-            // Data di nascita tra 18 e 65 anni fa
             Date fakeDate = faker.date().birthday(18, 65);
             LocalDate dataNascita = fakeDate.toInstant()
                     .atZone(ZoneId.systemDefault())
